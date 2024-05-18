@@ -21,6 +21,15 @@ components:
     type: Button
     layout_properties: {grid_position: 'WQLFJR,YNSFGJ'}
     event_bindings: {click: button_details_click}
+  - name: label_1
+    properties: {text: XIC Browsing}
+    type: Label
+    layout_properties: {grid_position: 'RHMAIU,HPVKNW'}
+  - name: drop_down_xic
+    properties: {}
+    type: DropDown
+    layout_properties: {grid_position: 'SGGNFQ,IBZOHG'}
+    event_bindings: {change: drop_down_xic_change}
 - name: main_panel
   properties: {}
   type: ColumnPanel
@@ -30,3 +39,7 @@ components:
     properties: {}
     type: Plot
     layout_properties: {grid_position: 'RDCECP,GOELSV'}
+- name: headline_1
+  properties: {role: headline, text: MSI XIC Browser V0.0.1}
+  type: Label
+  layout_properties: {slot: title}

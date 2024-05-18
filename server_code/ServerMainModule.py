@@ -4,6 +4,8 @@ import anvil.tables as tables
 import anvil.tables.query as q
 from anvil.tables import app_tables
 import anvil.server
+import plotly.express as px
+
 
 # This is a server module. It runs on the Anvil server,
 # rather than in the user's browser.
@@ -18,9 +20,16 @@ import anvil.server
 #   return 42
 #
 import pandas as pd
+import numpy as np
+import plotly.express as px
 
+class DFWrapper:
 
-def convert_to_df(file_obj)-> pd.DataFrame:        
+  def __init__(self, file_obj):
+      self.df = self.convert_to_df(file_obj)
+    
+
+  def convert_to_df(self, file_obj)-> pd.DataFrame:        
         header_file = open(data_files[file_obj], "r")
         header_lines = []
         for i in range(4):
@@ -38,19 +47,49 @@ def convert_to_df(file_obj)-> pd.DataFrame:
         df.columns=header_cols
         return df
 
-def to_np_from_df(df:pd.DataFrame, col_name:str):
-    xs = df["x"]
-    ys = df["y"]
-    cs = df[col_name].to_numpy()
+  def to_np_from_df(self, col_name:str):
+      df = self.df
+      xs = df["x"]
+      ys = df["y"]
+      cs = df[col_name].to_numpy()
+  
+      x_dim = np.unique(xs).size
+      y_dim = np.unique(ys).size
+      new_cs = cs.copy()
+      new_cs.resize(y_dim, x_dim)
+      return new_cs
+      
+@anvil.server.callable
+def extract_df_masses():
+  file_obj = "mussel_xic.txt"
+  header_file = open(data_files[file_obj], "r")
+  header_lines = []
+  for i in range(4):
+    aline = header_file.readline().strip().rstrip()
+    header_lines.append(aline)
 
-    x_dim = np.unique(xs).size
-    y_dim = np.unique(ys).size
-    new_cs = cs.copy()
-    new_cs.resize(y_dim, x_dim)
+  add_cols = header_lines[3].split('\t')
+  print("len cols = " + str(len(add_cols)))
+  return add_cols
+
+
 
 @anvil.server.callable
-def explore():
-  msi_df = convert_to_df('mussel_xic.txt')
-  print(str(msi_df.iloc[[3]]))
-  #print(msi_df.head())
+def extract_df_xic_fig(mass_to_extract):
+  file_obj = "mussel_xic.txt"
+  df_wrap = DFWrapper(file_obj)  
+  np_img = df_wrap.to_np_from_df(mass_to_extract)
+  print("np_img shape = " + str(np_img.shape))
+  fig = px.imshow(np_img)
+  return fig
+
+@anvil.server.callable
+def create_fig():
+    data = px.data.iris()
+    fig = px.scatter(data, x="sepal_width", y="sepal_length", color="species", trendline="ols")
+    return fig
+  
+
+
+
   
