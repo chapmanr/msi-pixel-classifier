@@ -1,0 +1,32 @@
+is_package: true
+container:
+  type: HtmlTemplate
+  properties: {html: '@theme:standard-page.html'}
+components:
+- type: FlowPanel
+  properties: {}
+  name: navbar_links
+  layout_properties: {slot: nav-right}
+  components:
+  - name: column_panel_1
+    properties: {}
+    type: ColumnPanel
+- name: lhs_browser_panel
+  properties: {}
+  type: ColumnPanel
+  layout_properties: {slot: left-nav}
+  components:
+  - name: button_details
+    properties: {text: Process}
+    type: Button
+    layout_properties: {grid_position: 'WQLFJR,YNSFGJ'}
+    event_bindings: {click: button_details_click}
+- name: main_panel
+  properties: {}
+  type: ColumnPanel
+  layout_properties: {slot: default}
+  components:
+  - name: plot_xic
+    properties: {}
+    type: Plot
+    layout_properties: {grid_position: 'RDCECP,GOELSV'}

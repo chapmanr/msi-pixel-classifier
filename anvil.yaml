@@ -1,14 +1,34 @@
-allow_embedding: false
-package_name: MSI_Pixel_Classifier
-name: MSI Pixel Classifier
-startup_form: Form1
-runtime_options:
-  version: 2
-  client_version: '3'
-  server_version: python3-sandbox
-  server_spec: {base: python310-standard}
-metadata: {title: MSI Pixel Classifier, description: Allows a scientist to classify MSI pixels as background or analyte}
 services:
 - source: /runtime/services/tables.yml
   client_config: {}
   server_config: {}
+- source: /runtime/services/anvil/files.yml
+  client_config: {}
+  server_config: {file_table: files}
+startup: {type: form, module: MSIMainForm}
+package_name: MSI_Pixel_Classifier
+allow_embedding: false
+name: MSI Pixel Classifier
+runtime_options:
+  version: 2
+  client_version: '3'
+  server_version: python3-sandbox
+  server_spec: {base: python310-machine-learning}
+metadata: {title: MSI Pixel Classifier, description: Allows a scientist to classify MSI pixels as background or analyte,
+  logo_img: 'asset:DSL_Logo.jpg'}
+startup_form: null
+db_schema:
+  files:
+    client: none
+    server: full
+    columns:
+    - name: path
+      admin_ui: {order: 0, width: 200}
+      type: string
+    - name: file
+      admin_ui: {order: 1, width: 200}
+      type: media
+    - name: file_version
+      admin_ui: {order: 2, width: 200}
+      type: string
+    title: Files
